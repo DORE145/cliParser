@@ -6,17 +6,12 @@ import (
 )
 
 func main() {
-	symbols := *flag.Bool("-symbols", false, "Count the number of sybols in the text file")
-	lines := *flag.Bool("-lines", false, "Counts the number of lines in the text file")
-	words := *flag.Bool("-words", false, "Counts the number of words in the text file")
-	uniqueWords := *flag.Bool("-uniqueWords", false, "Prints out all unique words from the text file")
-	help := *flag.Bool("-help", true, "Prints usage information of the application")
+	var symbols, lines, words, uniqueWords bool
+	flag.BoolVar(&symbols, "symbols", false, "Count the number of sybols in the text file")
+	flag.BoolVar(&lines, "lines", false, "Counts the number of lines in the text file")
+	flag.BoolVar(&words, "words", false, "Counts the number of words in the text file")
+	flag.BoolVar(&uniqueWords, "uniqueWords", false, "Prints out all unique words from the text file")
 	flag.Parse()
-
-	if help {
-		printUsage()
-		return
-	}
 
 	args := flag.Args()
 	if len(args) > 1 {
@@ -31,8 +26,10 @@ func main() {
 }
 
 func printUsage() {
-	fmt.Println("Avaliable flags:\n" +
-		"--help\n\tPrints usage information of the application (default true)\n" +
+	fmt.Println("Wc is a tool for basic analysis of text files\n\n" +
+		"Usage:\n\t wc [flags] path/to/file \n\n" +
+		"Avaliable flags:\n" +
+		"--help\n\tPrints usage information of the application\n" +
 		"--lines\n\tCounts the number of lines in the text file\n" +
 		"--symbols\n\tCount the number of sybols in the text file\n" +
 		"--uniqueWords\n\tPrints out all unique words from the text file\n" +
