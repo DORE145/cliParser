@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+
+	"github.com/DORE145/cliParser/internal"
 )
 
 func main() {
@@ -23,6 +26,30 @@ func main() {
 		printUsage()
 		return
 	}
+
+	//Storing enabled flags as bits for easier argument passing and expandability
+	flags := 0
+	if symbols {
+		flags += 1 << 0
+	}
+	if lines {
+		flags += 1 << 1
+	}
+	if words {
+		flags += 1 << 2
+	}
+	if uniqueWords {
+		flags += 1 << 3
+	}
+
+	file, err := os.Open(args[0])
+	if err != nil {
+		fmt.Printf("Courld not read the file: %s", err)
+		return
+	}
+	internal.Parse(file, flags)
+
+	file.Close()
 }
 
 func printUsage() {
