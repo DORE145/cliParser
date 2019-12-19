@@ -22,23 +22,26 @@ func Parse(file *os.File, flags int) *ParsingResult {
 	result := ParsingResult{UniqueWords: data.NewWordSet()}
 
 	for scaner.Scan() {
-		result.LinesCounter++
+		if (flags & 2) > 0 {
+			result.LinesCounter++
+		}
 		if (flags & 13) > 0 { //Flag mask 1101
 			line := scaner.Text()
-			result.SymbolsCounter += len(line)
-
+			if (flags & 1) > 0 {
+				result.SymbolsCounter += len(line)
+			}
 			if (flags & 12) > 0 { //Flag mask 1100
 				getUnique := (flags & 8) > 0
 				lineWords := scanLine(line, getUnique)
-				result.WordsCounter += len(lineWords)
+				if (flags & 4) > 0 {
+					result.WordsCounter += len(lineWords)
+				}
 				if getUnique {
 					result.UniqueWords.AddAll(lineWords)
 				}
 			}
 		}
 	}
-
-	//TODO: Write tests
 	//TODO: Add exported functions comments
 
 	scannerErr := scaner.Err()
@@ -56,9 +59,9 @@ func scanLine(line string, getUnique bool) []string {
 		return lineWords
 	}
 
-	result := make([]string, len(lineWords))
+	result := make([]string, 0, len(lineWords))
 
-	regExp, regExpErr := regexp.Compile("[[:punct:]“”]") //Regexp to detect punctuation and non standart quotation marks
+	regExp, regExpErr := regexp.Compile("[[:punct:]“”…]") //Regexp to detect punctuation and non standart quotation marks
 	if regExpErr != nil {
 		fmt.Printf("Regular expression creation failed: %s", regExpErr)
 		return nil
