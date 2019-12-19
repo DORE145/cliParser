@@ -47,9 +47,22 @@ func main() {
 		fmt.Printf("Courld not read the file: %s", err)
 		return
 	}
-	internal.Parse(file, flags)
+	result := internal.Parse(file, flags)
 
 	file.Close()
+
+	if lines {
+		fmt.Printf("Number of lines in the file: %d\n", result.LinesCounter)
+	}
+	if words {
+		fmt.Printf("Number of words in the file: %d\n", result.WordsCounter)
+	}
+	if symbols {
+		fmt.Printf("Number of symbols in the file: %d\n", result.SymbolsCounter)
+	}
+	if uniqueWords {
+		printUniqueWords(result.UniqueWords.Words())
+	}
 }
 
 func printUsage() {
@@ -61,4 +74,14 @@ func printUsage() {
 		"--symbols\n\tCount the number of sybols in the text file\n" +
 		"--uniqueWords\n\tPrints out all unique words from the text file\n" +
 		"--words\n\tCounts the number of words in the text file\n")
+}
+
+func printUniqueWords(words []string) {
+	fmt.Printf("Number of unique words: %d\nList of the unique words:\n", len(words))
+	for index, word := range words {
+		fmt.Printf("%13s\t", word)
+		if (index % 6) == 0 {
+			fmt.Println()
+		}
+	}
 }
