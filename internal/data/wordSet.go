@@ -40,13 +40,15 @@ func (set WordSet) Contains(word string) bool {
 	return set.words[word]
 }
 
-//Words function returns all present words in the set
+//Words function returns all present words in the set excluding tombstones
 func (set WordSet) Words() []string {
 	words := make([]string, len(set.words))
 	i := 0
-	for word := range set.words {
-		words[i] = word
-		i++
+	for word, present := range set.words {
+		if (present) {
+			words[i] = word
+			i++
+		}
 	}
 
 	return words
