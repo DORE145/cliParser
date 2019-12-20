@@ -10,6 +10,8 @@ import (
 	"github.com/DORE145/cliParser/internal/data"
 )
 
+//ParsingResult stores resuls of the file parsing
+//Field names corresponds the flags used to configure parser
 type ParsingResult struct {
 	LinesCounter   int
 	WordsCounter   int
@@ -17,6 +19,8 @@ type ParsingResult struct {
 	UniqueWords    data.WordSet
 }
 
+//Parse function parses incoming file according the flags
+//Flags are represernted as a bit mask
 func Parse(file *os.File, flags int) *ParsingResult {
 	scaner := bufio.NewScanner(file)
 	result := ParsingResult{UniqueWords: data.NewWordSet()}
@@ -42,7 +46,6 @@ func Parse(file *os.File, flags int) *ParsingResult {
 			}
 		}
 	}
-	//TODO: Add exported functions comments
 
 	scannerErr := scaner.Err()
 	if scannerErr != nil {
