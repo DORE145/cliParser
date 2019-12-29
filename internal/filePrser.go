@@ -21,26 +21,25 @@ type ParsingResult struct {
 
 //Parse function parses incoming file according the flags
 //Flags are represernted as a bit mask
-func Parse(file *os.File, flags int) *ParsingResult {
+func Parse(file *os.File, flags parserParams) *ParsingResult {
 	scaner := bufio.NewScanner(file)
 	result := ParsingResult{UniqueWords: data.NewWordSet()}
 
 	for scaner.Scan() {
-		if (flags & 2) > 0 {
+		if flags.isLines() {
 			result.LinesCounter++
 		}
-		if (flags & 13) > 0 { //Flag mask 1101
+		if flags.isSymbols() || flags.isUniqueWords() || flags.isWords() {
 			line := scaner.Text()
-			if (flags & 1) > 0 {
+			if flags.isSymbols() {
 				result.SymbolsCounter += len(line)
 			}
-			if (flags & 12) > 0 { //Flag mask 1100
-				getUnique := (flags & 8) > 0
-				lineWords := scanLine(line, getUnique)
-				if (flags & 4) > 0 {
+			if flags.isWords() || flags.isUniqueWords() { //Flag mask 1100
+				lineWords := scanLine(line, flags.isUniqueWords())
+				if flags.isWords() {
 					result.WordsCounter += len(lineWords)
 				}
-				if getUnique {
+				if flags.isUniqueWords() {
 					result.UniqueWords.AddAll(lineWords)
 				}
 			}

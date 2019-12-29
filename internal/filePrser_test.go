@@ -46,16 +46,16 @@ func TestParse(t *testing.T) {
 	words.AddAll([]string{"the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"})
 	type args struct {
 		file  *os.File
-		flags int
+		flags parserParams
 	}
 	tests := []struct {
 		name string
 		args args
 		want *ParsingResult
 	}{
-		{"Parse1", args{file1, 7}, &ParsingResult{LinesCounter: 3, WordsCounter: 128, SymbolsCounter: 657}},
-		{"Parse2", args{file2, 5}, &ParsingResult{WordsCounter: 93, SymbolsCounter: 562}},
-		{"Parse3", args{file3, 8}, &ParsingResult{UniqueWords: words}},
+		{"Parse1", args{file1, NewParams(true, true, true, false)}, &ParsingResult{LinesCounter: 3, WordsCounter: 128, SymbolsCounter: 657}},
+		{"Parse2", args{file2, NewParams(true, false, true, false)}, &ParsingResult{WordsCounter: 93, SymbolsCounter: 562}},
+		{"Parse3", args{file3, NewParams(false, false, false, true)}, &ParsingResult{UniqueWords: words}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

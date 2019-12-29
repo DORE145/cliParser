@@ -28,19 +28,7 @@ func main() {
 	}
 
 	//Storing enabled flags as bits for easier argument passing and expandability
-	flags := 0
-	if symbols {
-		flags += 1 << 0
-	}
-	if lines {
-		flags += 1 << 1
-	}
-	if words {
-		flags += 1 << 2
-	}
-	if uniqueWords {
-		flags += 1 << 3
-	}
+	flags := internal.NewParams(symbols, lines, words, uniqueWords)
 
 	file, err := os.Open(args[0])
 	if err != nil {
