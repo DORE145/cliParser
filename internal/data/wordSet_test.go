@@ -5,14 +5,6 @@ import (
 	"testing"
 )
 
-func TestNewWordSet(t *testing.T) {
-	t.Run("Default initializer", func(t *testing.T) {
-		if got := NewWordSet(); got.words == nil {
-			t.Errorf("NewWordSet() did not initialized the struct")
-		}
-	})
-}
-
 func TestWordSet_Add(t *testing.T) {
 	tests := []struct {
 		name      string
@@ -28,9 +20,9 @@ func TestWordSet_Add(t *testing.T) {
 	set := NewWordSet()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			prevLen := len(set.words)
+			prevLen := set.Size()
 			set.Add(tt.word)
-			currentLen := len(set.words)
+			currentLen := set.Size()
 			if tt.duplicate && prevLen != currentLen {
 				t.Error("Set changed side after adding dumplicate word")
 			}
@@ -53,9 +45,9 @@ func TestWordSet_AddAll(t *testing.T) {
 	set := NewWordSet()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			prevLen := len(set.words)
+			prevLen := set.Size()
 			set.AddAll(tt.words)
-			currentLen := len(set.words)
+			currentLen := set.Size()
 			if (currentLen - prevLen) != len(tt.words) {
 				t.Errorf("Set size changed unexpectedly. Expect: %d, Got: %d", prevLen+len(tt.words), currentLen)
 			}
@@ -77,7 +69,7 @@ func TestWordSet_Remove(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			set.Remove(tt.word)
-			if set.words[tt.word] {
+			if set.Contains(tt.word) {
 				t.Errorf("Word: %s supposed to be deleted from set, vut it still present", tt.word)
 			}
 		})
@@ -134,9 +126,9 @@ func TestWordSet_Words(t *testing.T) {
 		want  []string
 	}{
 		{"Size1", []string{"dog"}, []string{"dog"}},
-		{"Size2", []string{"exact", "cunning"}, []string{"exact", "cunning"}},
+		{"Size2", []string{"exact", "cunning"}, []string{"cunning", "exact"}},
 		{"Size3", []string{"publish", "president", "transaction"},
-			[]string{"publish", "president", "transaction"}},
+			[]string{"president", "publish", "transaction"}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

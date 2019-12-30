@@ -27,7 +27,7 @@ func main() {
 		return
 	}
 
-	//Storing enabled flags as bits for easier argument passing and expandability
+	//Storing enabled flags as separate data structure
 	flags := internal.NewParams(symbols, lines, words, uniqueWords)
 
 	file, err := os.Open(args[0])

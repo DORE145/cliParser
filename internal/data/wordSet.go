@@ -1,55 +1,156 @@
 package data
 
+import "fmt"
+
 //WordSet is a collection that stores unique words
-//Based on hashmap and exploits default values of bool variables
+//Based on binary tree
 type WordSet struct {
-	words map[string]bool
+	root *node
 }
 
-//NewWordSet function initializes internal map and returns new WordSet
+type node struct {
+	value string
+	left  *node
+	right *node
+}
+
+//NewWordSet function initializes empty set
 func NewWordSet() WordSet {
-	return WordSet{make(map[string]bool)}
+	return WordSet{}
 }
 
 //Add funtion adds word to the collection. If word is already present, nothing will happen
-func (set WordSet) Add(word string) {
-	set.words[word] = true
+func (set *WordSet) Add(word string) {
+	n := &node{word, nil, nil}
+	if set.root == nil {
+		set.root = n
+	} else {
+		add(set.root, n)
+	}
+}
+
+//Internal recursive add function
+func add(parrentNode, newNode *node) {
+	if newNode.value < parrentNode.value {
+		if parrentNode.left == nil {
+			parrentNode.left = newNode
+		} else {
+			add(parrentNode.left, newNode)
+		}
+	}
+	if newNode.value > parrentNode.value {
+		if parrentNode.right == nil {
+			parrentNode.right = newNode
+		} else {
+			add(parrentNode.right, newNode)
+		}
+	}
+	// Case when words are equal intentianally ignorred
 }
 
 //AddAll funtion adds all words from a slice to the collection. If word is already present, nothing will happen
-func (set WordSet) AddAll(words []string) {
+func (set *WordSet) AddAll(words []string) {
 	for _, word := range words {
 		set.Add(word)
 	}
 }
 
-//Remove function marks word in the collection as it is not present in the collection.
-//As a side effect it leaves a tombstone in the collection and not actualy removes it from map.
-//As a second side efffect if you will try to remove word that is not present in the collection it will create a tombstone and will increase size of the collection
-func (set WordSet) Remove(word string) {
-	set.words[word] = false
+//Remove function deletes word from the collection
+func (set *WordSet) Remove(word string) {
+	remove(set.root, word)
 }
 
-//Size function returns the size of the internal collection including tombstones
-func (set WordSet) Size() int {
-	return len(set.words)
+//Internal recursive delete function
+func remove(parrentNode *node, value string) *node {
+	if parrentNode == nil {
+		return nil
+	}
+
+	if value < parrentNode.value {
+		parrentNode.left = remove(parrentNode.left, value)
+		return parrentNode
+	}
+
+	if value > parrentNode.value {
+		parrentNode.right = remove(parrentNode.right, value)
+		return parrentNode
+	}
+
+	if parrentNode.left == nil && parrentNode.right == nil {
+		parrentNode = nil
+		return nil
+	}
+
+	if parrentNode.left == nil {
+		parrentNode = parrentNode.right
+		return parrentNode
+	}
+
+	if parrentNode.right == nil {
+		parrentNode = parrentNode.left
+		return parrentNode
+	}
+
+	//Findong smallest right child
+	smallestChild := parrentNode.right
+	for {
+		if smallestChild != nil && smallestChild.left != nil {
+			smallestChild = smallestChild.left
+		} else {
+			break
+		}
+	}
+	parrentNode.value = smallestChild.value
+	parrentNode.right = remove(parrentNode.right, smallestChild.value)
+	return parrentNode
+}
+
+//Size function returns the size of the internal collection
+func (set *WordSet) Size() int {
+	return size(set.root)
+}
+
+//Internal recursive size function
+func size(root *node) int {
+	if root == nil {
+		return 0
+	}
+	return size(root.left) + size(root.right) + 1
 }
 
 //Contains function check is the provided word is present in the collection
-func (set WordSet) Contains(word string) bool {
-	return set.words[word]
+func (set *WordSet) Contains(word string) bool {
+	return contains(set.root, word)
 }
 
-//Words function returns all present words in the set excluding tombstones
-func (set WordSet) Words() []string {
-	words := make([]string, len(set.words))
-	i := 0
-	for word, present := range set.words {
-		if (present) {
-			words[i] = word
-			i++
-		}
+//Internal recursive contains function
+func contains(root *node, word string) bool {
+	if root == nil {
+		return false
 	}
+	if word < root.value {
+		return contains(root.left, word)
+	}
+	if word > root.value {
+		return contains(root.right, word)
+	}
+	return true
+}
 
-	return words
+//Words function returns all present words in the set
+func (set *WordSet) Words() []string {
+	container := make([]string, 0)
+	container = words(set.root, container)
+	return container
+}
+
+//Internal recursive words fuction
+func words(root *node, container []string) []string {
+	if root != nil {
+		fmt.Println(root.value)
+		container = words(root.left, container)
+		container = append(container, root.value)
+		container = words(root.right, container)
+	}
+	return container
 }
