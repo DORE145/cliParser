@@ -24,7 +24,7 @@ func TestWordSet_Add(t *testing.T) {
 			set.Add(tt.word)
 			currentLen := set.Size()
 			if tt.duplicate && prevLen != currentLen {
-				t.Error("Set changed side after adding dumplicate word")
+				t.Error("Set changed side after adding duplicate word")
 			}
 			if !tt.duplicate && (currentLen-prevLen) != 1 {
 				t.Errorf("Set size changed unexpectedly. Expect: %d, Got: %d", prevLen+1, currentLen)

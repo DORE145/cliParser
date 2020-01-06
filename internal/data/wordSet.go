@@ -19,7 +19,7 @@ func NewWordSet() WordSet {
 	return WordSet{}
 }
 
-//Add funtion adds word to the collection. If word is already present, nothing will happen
+//Add function adds word to the collection. If word is already present, nothing will happen
 func (set *WordSet) Add(word string) {
 	n := &node{word, nil, nil}
 	if set.root == nil {
@@ -45,10 +45,10 @@ func add(parrentNode, newNode *node) {
 			add(parrentNode.right, newNode)
 		}
 	}
-	// Case when words are equal intentianally ignorred
+	// Case when words are equal intentianally ignored
 }
 
-//AddAll funtion adds all words from a slice to the collection. If word is already present, nothing will happen
+//AddAll function adds all words from a slice to the collection. If word is already present, nothing will happen
 func (set *WordSet) AddAll(words []string) {
 	for _, word := range words {
 		set.Add(word)
@@ -144,7 +144,7 @@ func (set *WordSet) Words() []string {
 	return container
 }
 
-//Internal recursive words fuction
+//Internal recursive words function
 func words(root *node, container []string) []string {
 	if root != nil {
 		fmt.Println(root.value)

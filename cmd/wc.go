@@ -10,7 +10,7 @@ import (
 
 func main() {
 	var symbols, lines, words, uniqueWords bool
-	flag.BoolVar(&symbols, "symbols", false, "Count the number of sybols in the text file")
+	flag.BoolVar(&symbols, "symbols", false, "Count the number of symbols in the text file")
 	flag.BoolVar(&lines, "lines", false, "Counts the number of lines in the text file")
 	flag.BoolVar(&words, "words", false, "Counts the number of words in the text file")
 	flag.BoolVar(&uniqueWords, "uniqueWords", false, "Prints out all unique words from the text file")
@@ -32,7 +32,7 @@ func main() {
 
 	file, err := os.Open(args[0])
 	if err != nil {
-		fmt.Printf("Courld not read the file: %s", err)
+		fmt.Printf("Could not read the file: %s", err)
 		return
 	}
 	result := internal.Parse(file, flags)
@@ -59,7 +59,7 @@ func printUsage() {
 		"Avaliable flags:\n" +
 		"--help\n\tPrints usage information of the application\n" +
 		"--lines\n\tCounts the number of lines in the text file\n" +
-		"--symbols\n\tCount the number of sybols in the text file\n" +
+		"--symbols\n\tCount the number of symbols in the text file\n" +
 		"--uniqueWords\n\tPrints out all unique words from the text file\n" +
 		"--words\n\tCounts the number of words in the text file\n")
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/DORE145/cliParser/internal/data"
 )
 
-//ParsingResult stores resuls of the file parsing
+//ParsingResult stores results of the file parsing
 //Field names corresponds the flags used to configure parser
 type ParsingResult struct {
 	LinesCounter   int
@@ -20,17 +20,17 @@ type ParsingResult struct {
 }
 
 //Parse function parses incoming file according the flags
-//Flags are represernted as a bit mask
+//Flags are represented with a struct
 func Parse(file *os.File, flags parserParams) *ParsingResult {
-	scaner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(file)
 	result := ParsingResult{UniqueWords: data.NewWordSet()}
 
-	for scaner.Scan() {
+	for scanner.Scan() {
 		if flags.isLines() {
 			result.LinesCounter++
 		}
 		if flags.isSymbols() || flags.isUniqueWords() || flags.isWords() {
-			line := scaner.Text()
+			line := scanner.Text()
 			if flags.isSymbols() {
 				result.SymbolsCounter += len(line)
 			}
@@ -46,7 +46,7 @@ func Parse(file *os.File, flags parserParams) *ParsingResult {
 		}
 	}
 
-	scannerErr := scaner.Err()
+	scannerErr := scanner.Err()
 	if scannerErr != nil {
 		fmt.Printf("Error parsing the file: %s", scannerErr)
 	}
@@ -70,7 +70,7 @@ func scanLine(line string, getUnique bool) []string {
 	}
 
 	for _, word := range lineWords {
-		normalizedWord := strings.ToLower(word) //Changing to lower case and removing puncuation
+		normalizedWord := strings.ToLower(word) //Changing to lower case and removing punctuation
 		normalizedWord = regExp.ReplaceAllString(normalizedWord, "")
 		if len(normalizedWord) != 0 { //Skiping empty words
 			result = append(result, normalizedWord)
