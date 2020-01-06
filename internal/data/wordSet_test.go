@@ -63,6 +63,9 @@ func TestWordSet_Remove(t *testing.T) {
 		{"Del1", "dog"},
 		{"Del2", "exact"},
 		{"Del3", "publish"},
+		{"Del4", "president"},
+		{"Del5", "transaction"},
+		{"Del6", "cunning"},
 	}
 	set := NewWordSet()
 	set.AddAll([]string{"dog", "publish", "president", "transaction", "cunning"})

@@ -57,7 +57,7 @@ func (set *WordSet) AddAll(words []string) {
 
 //Remove function deletes word from the collection
 func (set *WordSet) Remove(word string) {
-	remove(set.root, word)
+	set.root = remove(set.root, word)
 }
 
 //Internal recursive delete function
